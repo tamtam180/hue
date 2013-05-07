@@ -68,6 +68,8 @@ desktop.log.fancy_logging()
 LANGUAGE_CODE = 'en-us'
 #LANGUAGE_CODE = 'it'
 
+DEFAULT_CHARSET = 'utf-8'
+
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not

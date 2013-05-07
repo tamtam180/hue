@@ -152,9 +152,11 @@ class Job(models.Model):
   def is_deployed(self, fs):
     return self.deployment_dir != '' and fs.exists(self.deployment_dir)
 
+  def __unicode__(self):
+    return '%s - %s' % (force_unicode(self.name), self.owner)
+
   def __str__(self):
-    res = '%s - %s' % (force_unicode(self.name), self.owner)
-    return res.encode('utf-8', 'xmlcharrefreplace')
+    return self.__unicode__().encode('utf-8', 'xmlcharrefreplace')
 
   def get_full_node(self):
     try:
@@ -471,8 +473,8 @@ class Workflow(Job):
   def to_xml(self, mapping=None):
     if mapping is None:
       mapping = {}
-    tmpl = 'editor/gen/workflow.xml.mako'
-    return re.sub(re.compile('\s*\n+', re.MULTILINE), '\n', django_mako.render_to_string(tmpl, {'workflow': self, 'mapping': mapping})).encode('utf-8', 'xmlcharrefreplace')
+    tmpl = django_mako.render_to_string('editor/gen/workflow.xml.mako', {'workflow': self, 'mapping': mapping})
+    return force_unicode(re.sub(re.compile('\s*\n+', re.MULTILINE), '\n', tmpl))
 
 
 class Link(models.Model):
@@ -578,7 +580,7 @@ class Node(models.Model):
       'mapping': mapping
     }
 
-    return django_mako.render_to_string(node.get_template_name(), data)
+    return force_unicode(django_mako.render_to_string(node.get_template_name(), data))
 
   # Can't use through relation directly with this Django version?
   # https://docs.djangoproject.com/en/1.2/topics/db/models/#intermediary-manytomany
@@ -1205,7 +1207,7 @@ class DecisionEnd(ControlFlow):
     return [link.parent for link in self.get_parent_links()]
 
   def to_xml(self, mapping):
-    return ''
+    return u''
 
 
 FREQUENCY_UNITS = (('minutes', _('Minutes')),
@@ -1263,8 +1265,8 @@ class Coordinator(Job):
   def to_xml(self, mapping=None):
     if mapping is None:
       mapping = {}
-    tmpl = "editor/gen/coordinator.xml.mako"
-    return re.sub(re.compile('\s*\n+', re.MULTILINE), '\n', django_mako.render_to_string(tmpl, {'coord': self, 'mapping': mapping})).encode('utf-8', 'xmlcharrefreplace')
+    tmpl = django_mako.render_to_string("editor/gen/coordinator.xml.mako", {'coord': self, 'mapping': mapping})
+    return force_unicode(re.sub(re.compile('\s*\n+', re.MULTILINE), '\n', tmpl))
 
   def clone(self, new_owner=None):
     datasets = Dataset.objects.filter(coordinator=self)
@@ -1517,8 +1519,8 @@ class Bundle(Job):
   def to_xml(self, mapping=None):
     if mapping is None:
       mapping = {}
-    tmpl = "editor/gen/bundle.xml.mako"
-    return re.sub(re.compile('\s*\n+', re.MULTILINE), '\n', django_mako.render_to_string(tmpl, {'bundle': self, 'mapping': mapping})).encode('utf-8', 'xmlcharrefreplace')
+    tmpl = django_mako.render_to_string("editor/gen/bundle.xml.mako", {'bundle': self, 'mapping': mapping})
+    return force_unicode(re.sub(re.compile('\s*\n+', re.MULTILINE), '\n', tmpl))
 
   def clone(self, new_owner=None):
     bundleds = BundledCoordinator.objects.filter(bundle=self)

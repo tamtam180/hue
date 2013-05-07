@@ -22,6 +22,7 @@ except ImportError:
 import logging
 
 from django.http import HttpResponse
+from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext as _
 
 from desktop.lib.exceptions import StructuredException
@@ -258,7 +259,7 @@ def _workflow(request, workflow):
 def workflow_validate_node(request, workflow, node_type):
   response = {'status': -1, 'data': {}}
 
-  node_dict = format_dict_field_values(json.loads(str(request.POST.get('node'))))
+  node_dict = format_dict_field_values(json.loads(request.POST.get('node')))
 
   if _validate_node_json(node_type, node_dict, response['data'], request.user, workflow):
     response['status'] = 0
@@ -275,7 +276,7 @@ def workflow_save(request, workflow):
   if request.method != 'POST':
     raise StructuredException(code="METHOD_NOT_ALLOWED_ERROR", message=_('Must be POST request.'), error_code=405)
 
-  json_workflow = format_dict_field_values(json.loads(str(request.POST.get('workflow'))))
+  json_workflow = format_dict_field_values(json.loads(request.POST.get('workflow')))
   json_workflow.setdefault('schema_version', workflow.schema_version)
 
   form = WorkflowForm(data=json_workflow)

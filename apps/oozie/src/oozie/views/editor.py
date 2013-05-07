@@ -28,6 +28,7 @@ from django.forms.formsets import formset_factory
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.utils.encoding import force_unicode
 from django.utils.functional import curry
 from django.utils.translation import ugettext as _, activate as activate_translation
 
@@ -739,10 +740,10 @@ def get_create_bundled_coordinator_html(request, bundle, bundled_coordinator_for
     bundled_coordinator_instance = BundledCoordinator(bundle=bundle)
     bundled_coordinator_form = BundledCoordinatorForm(instance=bundled_coordinator_instance, prefix='create-bundled-coordinator')
 
-  return render('editor/create_bundled_coordinator.mako', request, {
-                            'bundle': bundle,
-                            'bundled_coordinator_form': bundled_coordinator_form,
-                          }, force_template=True).content.decode('utf-8', 'replace')
+  return force_unicode(render('editor/create_bundled_coordinator.mako', request, {
+                              'bundle': bundle,
+                              'bundled_coordinator_form': bundled_coordinator_form,
+                            }, force_template=True).content)
 
 
 @check_job_access_permission()
@@ -764,11 +765,11 @@ def edit_bundled_coordinator(request, bundle, bundled_coordinator):
     bundled_coordinator_form = BundledCoordinatorForm(instance=bundled_coordinator_instance, prefix='edit-bundled-coordinator')
 
   if response['status'] != 0:
-    response['data'] = render('editor/edit_bundled_coordinator.mako', request, {
-                            'bundle': bundle,
-                            'bundled_coordinator_form': bundled_coordinator_form,
-                            'bundled_coordinator_instance': bundled_coordinator_instance,
-                          }, force_template=True).content
+    response['data'] = force_unicode(render('editor/edit_bundled_coordinator.mako', request, {
+                                            'bundle': bundle,
+                                            'bundled_coordinator_form': bundled_coordinator_form,
+                                            'bundled_coordinator_instance': bundled_coordinator_instance,
+                                          }, force_template=True).content)
 
   return HttpResponse(json.dumps(response), mimetype="application/json")
 
