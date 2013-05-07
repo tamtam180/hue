@@ -261,11 +261,11 @@ ${ layout.menubar(section='dashboard') }
       </div>
 
       <div class="tab-pane" id="log">
-        <pre>${ oozie_bundle.log.decode('utf-8', 'replace') }</pre>
+        <pre>${ oozie_bundle.log }</pre>
       </div>
 
       <div class="tab-pane" id="definition">
-        <textarea id="definitionEditor">${ oozie_bundle.definition.decode('utf-8', 'replace') }</textarea>
+        <textarea id="definitionEditor">${ oozie_bundle.definition }</textarea>
       </div>
     </div>
 

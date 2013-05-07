@@ -265,11 +265,11 @@ ${ layout.menubar(section='dashboard') }
       </div>
 
       <div class="tab-pane" id="log">
-        <pre>${ oozie_coordinator.log.decode('utf-8', 'replace') }</pre>
+        <pre>${ oozie_coordinator.log }</pre>
       </div>
 
       <div class="tab-pane" id="definition">
-        <textarea id="definitionEditor">${ oozie_coordinator.definition.decode('utf-8', 'replace') }</textarea>
+        <textarea id="definitionEditor">${ oozie_coordinator.definition }</textarea>
       </div>
     </div>
 

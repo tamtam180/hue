@@ -27,6 +27,7 @@ import os
 from nose.tools import raises, assert_true, assert_false, assert_equal, assert_not_equal
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.utils.encoding import force_unicode
 
 from desktop.lib.django_test_util import make_logged_in_client
 from desktop.lib.test_utils import grant_access, add_permission
@@ -2488,7 +2489,7 @@ class TestDashboard(OozieMockBase):
 
   def test_list_coordinator(self):
     response = self.c.get(reverse('oozie:list_oozie_coordinator', args=[MockOozieApi.COORDINATOR_IDS[4]]))
-    assert_true(u'Coordinator DåilyWordCount5' in response.content.decode('utf-8', 'replace'), response.content.decode('utf-8', 'replace'))
+    assert_true(u'Coordinator DåilyWordCount5' in force_unicode(response.content), force_unicode(response.content))
     assert_true('Workflow' in response.content, response.content)
 
 

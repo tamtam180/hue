@@ -26,7 +26,7 @@ import stat
 import threading
 import time
 
-from django.utils.encoding import smart_str
+from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _
 from desktop.lib.rest import http_client, resource
 from hadoop.fs import normpath, SEEK_SET, SEEK_CUR, SEEK_END
@@ -317,7 +317,7 @@ class WebHdfs(Hdfs):
     # move to original path
     # the path could have been expunged.
     if self.exists(original_path):
-      raise IOError(errno.EEXIST, _("Path %s already exists.") % str(smart_str(original_path)))
+      raise IOError(errno.EEXIST, _("Path %s already exists.") % smart_str(original_path))
     self.rename(path, original_path)
 
   def purge_trash(self):
@@ -360,7 +360,7 @@ class WebHdfs(Hdfs):
     result = self._root.put(old, params)
     if not result['boolean']:
       raise IOError(_("Rename failed: %s -> %s") %
-                    (str(smart_str(old)), str(smart_str(new))))
+                    (smart_str(old), smart_str(new)))
 
   def rename_star(self, old_dir, new_dir):
     """Equivalent to `mv old_dir/* new"""
@@ -465,7 +465,7 @@ class WebHdfs(Hdfs):
     if permission is not None:
       params['permission'] = safe_octal(permission)
 
-    self._invoke_with_redirect('PUT', path, params, data)
+    self._invoke_with_redirect('PUT', path, params, smart_str(data))
 
 
   def append(self, path, data):
@@ -477,7 +477,7 @@ class WebHdfs(Hdfs):
     path = Hdfs.normpath(path)
     params = self._getparams()
     params['op'] = 'APPEND'
-    self._invoke_with_redirect('POST', path, params, data)
+    self._invoke_with_redirect('POST', path, params, smart_str(data))
 
 
   def copyfile(self, src, dst):

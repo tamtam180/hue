@@ -27,15 +27,16 @@ import re
 from cStringIO import StringIO
 from time import mktime
 
+from django.core.urlresolvers import reverse
+from django.utils.encoding import force_unicode
+from django.utils.translation import ugettext as _
+
 from desktop.lib import i18n
 from desktop.lib.exceptions_renderable import PopupException
 from desktop.log.access import access_warn
 
 import hadoop.confparse
 from liboozie.utils import parse_timestamp, format_time
-
-from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
 
 
 class Action(object):
@@ -311,14 +312,14 @@ class Job(object):
     """Get the log lazily, trigger Oozie API call at the first access."""
     if self._log is None:
       self._log = self._api.get_job_log(self.id)
-    return self._log
+    return force_unicode(self._log)
   log = property(_get_log)
 
   def _get_definition(self):
     """Get the definition lazily, trigger Oozie API call at the first access."""
     if self._definition is None:
       self._definition = self._api.get_job_definition(self.id)
-    return self._definition
+    return force_unicode(self._definition)
   definition = property(_get_definition)
 
   def start(self):
